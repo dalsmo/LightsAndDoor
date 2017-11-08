@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 def door_timer_callback():
     door.close()
-    print("door closed")
+    print("Door CLOSED")
 
 door_timer = threading.Timer(15, door_timer_callback)
 
@@ -20,38 +20,40 @@ def index():
     doorState = 'open' if door.is_open() else 'closed'
     lightState = 'on' if lights.is_on() else 'off'
     
-    return 'this is the door and lights index page, lights are {lights}, door is {door}'.format(door=doorState, lights=lightState)
+    return 'This is the door and lights index page, lights are {lights}, door is {door}.'.format(door=doorState, lights=lightState)
 
-###########################
+
 @app.route('/door/open')
 def open():
     door.open()
-    print("door open")
+    print("Door OPEN")
 
     door_timer.cancel()
     door_timer.start()
 
     return '200 status ok'
 
-###########################
+
 @app.route('/light/on')
 def on():
     lights.on()
-    print("lights ON")
+    print("Lights ON")
     return '200 ok'
+
 
 @app.route('/light/off')
 def off():
     lights.off()
-    print("lights off")
+    print("Lights OFF")
     return '200 ok'
 
-###########################
+
 @app.route('/statusOfStuff')
 def statusOfStuff():
-    print("cheking staus of door and lights")
+    print("Checking status of door and lights")
     return jsonify(lights=lights.is_on(),
                    door=door.is_open())
+
 
 if __name__ == '__main__':
     app.run()
