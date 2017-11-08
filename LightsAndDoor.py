@@ -1,11 +1,18 @@
 from flask import Flask
 from flask import jsonify
-import time
+import threading
 import door
 import lights
 
 
 app = Flask(__name__)
+
+
+def door_timer_callback():
+    door.close()
+    print("door closed")
+
+door_timer = threading.Timer(15, door_timer_callback)
 
 
 @app.route('/')
@@ -20,9 +27,9 @@ def index():
 def open():
     door.open()
     print("door open")
-    time.sleep(15)
 
-    door.close()
+    door_timer.cancel()
+    door_timer.start()
 
     return '200 status ok'
 
